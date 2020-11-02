@@ -8,7 +8,7 @@ namespace CoffeeTalk.Microservice.Profile.Services
 {
     public interface IProfileService
     {
-        Task<ProfileEntity> GetProfile(Guid profileId);
+        Task<ProfileEntity> GetProfile(string profileId);
         Task<ProfileEntity> UpdateProfile(UpdateProfileRequestBody updateProfileRequestBody);
     }
 }

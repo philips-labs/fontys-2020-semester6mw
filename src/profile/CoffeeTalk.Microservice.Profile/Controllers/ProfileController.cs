@@ -19,7 +19,7 @@ namespace CoffeeTalk.Microservice.Profile.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProfile(Guid profileId)
+        public async Task<IActionResult> GetProfile(string profileId)
         {
             var result = await _service.GetProfile(profileId);
             if (result == null) return NotFound("This profile does not exist");

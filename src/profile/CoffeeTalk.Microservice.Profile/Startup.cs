@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using CoffeeTalk.Microservice.Profile.Config;
+using Microsoft.Extensions.Options;
 
 namespace CoffeeTalk.Microservice.Profile
 {
@@ -26,6 +28,11 @@ namespace CoffeeTalk.Microservice.Profile
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.Configure<ProfileDatabaseSettings>(
+                Configuration.GetSection(nameof(ProfileDatabaseSettings)));
+            services.AddSingleton<IProfileDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<ProfileDatabaseSettings>>().Value);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
