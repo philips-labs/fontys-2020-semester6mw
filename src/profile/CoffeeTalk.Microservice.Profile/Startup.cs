@@ -29,10 +29,13 @@ namespace CoffeeTalk.Microservice.Profile
         {
             services.AddControllers();
 
-            services.Configure<ProfileDatabaseSettings>(
-                Configuration.GetSection(nameof(ProfileDatabaseSettings)));
-            services.AddSingleton<IProfileDatabaseSettings>(sp =>
-                sp.GetRequiredService<IOptions<ProfileDatabaseSettings>>().Value);
+            services.Configure<ProfileDatabaseSettings>(options =>
+            {
+                options.ConnectionString
+                    = Configuration.GetSection("MongoConnection:ConnectionString").Value;
+                options.DatabaseName
+                    = Configuration.GetSection("MongoConnection:Database").Value;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
