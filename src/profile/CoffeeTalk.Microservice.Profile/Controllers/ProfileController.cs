@@ -1,36 +1,52 @@
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using CoffeeTalk.Microservice.Profile.Models.RequestBody;
 
-using CoffeeTalk.Microservice.Profile.Services;
+using CoffeeTalk.Microservice.Profile.Data.Repository;
+using CoffeeTalk.Microservice.Profile.Models.Entities;
 
 namespace CoffeeTalk.Microservice.Profile.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class ProfileController : ControllerBase
+    [Produces("applicaiton/json")]
+    [Route("api/[controller]")]
+    public class ProfileController : Controller
     {
-        private readonly IProfileService _service;
+        private readonly IProfileRepository _profileRepo;
 
-        public ProfileController(IProfileService service)
+        public ProfileController(IProfileRepository profileRepo)
         {
-            _service = service;
+            _profileRepo = profileRepo;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetProfile(string profileId)
         {
-            var result = await _service.GetProfile(profileId);
+            var result = await _profileRepo.GetProfile(profileId);
             if (result == null) return NotFound("This profile does not exist");
             return Ok(result);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequestBody updateProfileRequestBody) 
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequestBody updateProfileRequestBody)
         {
-            var result = await _service.UpdateProfile(updateProfileRequestBody);
-            return Ok();
+            string id = updateProfileRequestBody.Id;
+            List<string> interests = updateProfileRequestBody.Interests;
+            List<Project> previousProjects = updateProfileRequestBody.PreviousProjects;
+
+            var result = await _profileRepo.UpdateProfile(id, interests, previousProjects);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public void CreateProfile([FromBody] CreateProfileRequestBody createProfileRequestBody)
+        {
+            string firstName = createProfileRequestBody.FirstName;
+            string lastName = createProfileRequestBody.LastName;
+            int age = createProfileRequestBody.Age;
+
+            _profileRepo.CreateProfile(firstName, lastName, age);
         }
     }
 }

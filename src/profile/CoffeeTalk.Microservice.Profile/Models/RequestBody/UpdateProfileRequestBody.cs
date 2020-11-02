@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using CoffeeTalk.Microservice.Profile.Models.Entities;
 
 namespace CoffeeTalk.Microservice.Profile.Models.RequestBody
 {
@@ -8,6 +9,6 @@ namespace CoffeeTalk.Microservice.Profile.Models.RequestBody
     {
         [Required] public string Id { get; set; }
         public List<string> Interests { get; set; }
-        public List<string> PreviousProjects { get; set; }
+        public List<Project> PreviousProjects { get; set; }
     }
 }
