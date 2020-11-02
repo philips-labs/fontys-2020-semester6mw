@@ -11,7 +11,7 @@ namespace CoffeeTalk.Microservice.Profile.Data.Repository
 {
     public class ProfileRepositroy : IProfileRepository
     {
-        private readonly ProfileContext _context;
+        private readonly ProfileContext _context = null;
 
         public ProfileRepositroy(IOptions<ProfileDatabaseSettings> settings)
         {

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using CoffeeTalk.Microservice.Profile.Config;
 using Microsoft.Extensions.Options;
+using CoffeeTalk.Microservice.Profile.Data.Repository;
 
 namespace CoffeeTalk.Microservice.Profile
 {
@@ -34,13 +35,24 @@ namespace CoffeeTalk.Microservice.Profile
                 options.ConnectionString
                     = Configuration.GetSection("MongoConnection:ConnectionString").Value;
                 options.DatabaseName
-                    = Configuration.GetSection("MongoConnection:Database").Value;
+                    = Configuration.GetSection("MongoConnection:DatabaseName").Value;
             });
+
+            services.AddSwaggerGen();
+
+            services.AddTransient<IProfileRepository, ProfileRepositroy>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c => 
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoffeeTalk API");
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
