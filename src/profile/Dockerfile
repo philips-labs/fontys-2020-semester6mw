@@ -1,18 +1,14 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim as base
-
 WORKDIR /app
-EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster as build
-WORKDIR /src
-COPY ["CoffeeTalk.Microservice.Profile/CoffeeTalk.Microservice.Profile.csproj", "CoffeeTalk.Microservice.Profile/"]
-RUN dotnet restore "CoffeeTalk.Microservice.Profile/CoffeeTalk.Microservice.Profile.csproj" --source https://api.nuget.org/v3/index.json
-COPY . .
-WORKDIR "/src/CoffeeTalk.Microservice.Profile"
-RUN dotnet build "CoffeeTalk.Microservice.Profile.csproj" -c release -o /app/build
+WORKDIR /src/CoffeeTalk.Microservice.Profile
+
+COPY CoffeeTalk.Microservice.Profile/CoffeeTalk.Microservice.Profile.csproj .
+RUN dotnet restore CoffeeTalk.Microservice.Profile.csproj
 
 FROM build as publish
-RUN dotnet publish "CoffeeTalk.Microservice.Profile.csproj" -c release -o /app/publish
+RUN dotnet publish CoffeeTalk.Microservice.Profile.csproj -c release -o /app
 
 FROM base as final
 WORKDIR /app
