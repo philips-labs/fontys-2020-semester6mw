@@ -9,9 +9,10 @@ using CoffeeTalk.Microservice.Profile.Models.Entities;
 
 namespace CoffeeTalk.Microservice.Profile.Controllers
 {
+    [ApiController]
     [Produces("applicaiton/json")]
     [Route("api/[controller]")]
-    public class ProfileController : Controller
+    public class ProfileController : ControllerBase
     {
         private readonly IProfileRepository _profileRepo;
 
