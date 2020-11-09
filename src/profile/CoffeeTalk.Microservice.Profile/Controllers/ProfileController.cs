@@ -10,7 +10,7 @@ using CoffeeTalk.Microservice.Profile.Models.Entities;
 namespace CoffeeTalk.Microservice.Profile.Controllers
 {
     [ApiController]
-    [Produces("applicaiton/json")]
+    [Produces("application/json")]
     [Route("api/[controller]")]
     public class ProfileController : ControllerBase
     {
@@ -19,6 +19,14 @@ namespace CoffeeTalk.Microservice.Profile.Controllers
         public ProfileController(IProfileRepository profileRepo)
         {
             _profileRepo = profileRepo;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllProfiles()
+        {
+            var result = await _profileRepo.GetAllProfiles();
+            if (result == null) return NotFound("No profiles found");
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

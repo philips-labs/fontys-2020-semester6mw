@@ -18,6 +18,18 @@ namespace CoffeeTalk.Microservice.Profile.Data.Repository
             _context = new ProfileContext(settings);
         }
 
+        public async Task<IEnumerable<ProfileEntity>> GetAllProfiles()
+        {
+            try 
+            {
+                return await _context.Profiles.Find(_ => true).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task CreateProfile(string firstName, string lastName, int age)
         {
             ProfileEntity profileEntity = new ProfileEntity(firstName, lastName, age);
