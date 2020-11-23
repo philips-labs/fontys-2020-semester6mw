@@ -20,5 +20,30 @@ namespace CoffeeTalk.Microservice.Matching.Models.Entities
         public List<string> Interests { get; set; } = new List<string>();
 
         public List<Project> PreviousProjects { get; set; } = new List<Project>();
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType()) return false;
+
+            Profile profile = (Profile) obj;
+            return Equals(obj);
+        }
+
+        private bool Equals(Profile other)
+        {
+            return this.Id == other.Id;
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = Id.GetHashCode();
+                hashCode = (hashCode * 13) ^ FirstName.GetHashCode();
+                hashCode = (hashCode * 13) ^ LastName.GetHashCode();
+                hashCode = (hashCode * 13) ^ Age.GetHashCode();
+                return hashCode;
+            }
+        }
     }
 }

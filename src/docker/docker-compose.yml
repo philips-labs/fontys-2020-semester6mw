@@ -48,4 +48,3 @@ services:
       - 5100:80
     depends_on: 
       - coffeetalk-mongo-db
-      - coffeetalk-service-profile
