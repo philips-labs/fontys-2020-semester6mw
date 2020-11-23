@@ -21,7 +21,6 @@ import Person from "@material-ui/icons/Person";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
-import Icons from "views/Icons/Icons";
 // core components/views for RTL layout
 
 const dashboardRoutes = [

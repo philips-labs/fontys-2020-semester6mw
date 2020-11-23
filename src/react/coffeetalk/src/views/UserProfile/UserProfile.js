@@ -60,7 +60,7 @@ const useStyles = makeStyles((styles) => ({
   },
 }));
 
-export default function UserProfile() {
+export default function UserProfile(props) {
   const classes = useStyles();
   const [chipData, setChipData] = React.useState([
     {key: 0, label: 'Angular', active: false},
@@ -76,6 +76,7 @@ export default function UserProfile() {
     ])
 
   const [count, setCount] = React.useState(0);
+
 
   /*const newproject = {
     name: 'p',
@@ -122,20 +123,19 @@ export default function UserProfile() {
   }
 
   const handleFirstNameChange = (event) => {
-    profile.firstname = event.target.value;
-    console.log(profile);
+    setProfile({...profile, firstname: event.target.value})
   }
 
   const handleLastNameChange = (event) => {
-    profile.lastname = event.target.value;
+    setProfile({...profile, lastname: event.target.value})
   }
 
   const handleAgeChange = (event) => {
-    profile.age = event.target.value;
+    setProfile({...profile, age: event.target.value})
   }
 
   const handleProfileDescChange = (event) => {
-    profile.description = event.target.value;
+    setProfile({...profile, description: event.target.value})
   }
 
   const handleUpdateProfile = () => {
@@ -163,12 +163,14 @@ export default function UserProfile() {
                 <GridItem xs={12} sm={12} md={6}>
                   <CustomInput
                     labelText="First Name"
+                    
                     id="first-name"
                     formControlProps={{
                       fullWidth: true
                     }}
                     inputProps={{
-                      onChange: handleFirstNameChange
+                      onChange: handleFirstNameChange,
+                      value: profile.firstname
                     }}
                   />
                 </GridItem>
@@ -180,7 +182,8 @@ export default function UserProfile() {
                       fullWidth: true
                     }}
                     inputProps={{
-                      onChange: handleLastNameChange
+                      onChange: handleLastNameChange,
+                      value: profile.lastname
                     }}
                   />
                 </GridItem>
@@ -194,20 +197,15 @@ export default function UserProfile() {
                       fullWidth: false
                     }}
                     inputProps={{
-                      onChange: handleAgeChange
+                      onChange: handleAgeChange,
+                      value: profile.age
                     }}
                   />
                 </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <br/>
-                <CardIcon profile>
-                    <img className={classes.image} src={avatar}/>
-                  </CardIcon>
-                  {/*<Button color="primary">Change profile picture</Button>*/}
-                </GridItem>
+               
               </GridContainer>
               <GridContainer>
-                <GridItem>
+                <GridItem xs={12}>
                   <CustomInput
                       labelText="Profile description"
                       id="profiledescription"
@@ -216,8 +214,9 @@ export default function UserProfile() {
                       }}
                       inputProps={{
                         multiline: true,
-                        rows: 5,
-                        onChange: handleProfileDescChange
+                        rows: 3,
+                        onChange: handleProfileDescChange,
+                        value: profile.description
                       }}
                       >
                     </CustomInput>
@@ -228,25 +227,6 @@ export default function UserProfile() {
               </GridContainer>
               <GridContainer>
                 <InterestAutocomplete></InterestAutocomplete>
-              </GridContainer>
-              <GridContainer>
-              <Paper component="ul" className={classes.root}>
-                    {chipData.map((data) => {
-                      let icon;
-                      return(
-                        <li key={data.key}>
-                          <Chip
-                            color={"primary"}
-                            onClick={() => handleClick(data.key)}
-                            variant={data.active ? "default" : "outlined"}
-                            icon={icon}
-                            label={data.label}
-                            className={classes.chip}>
-                          </Chip>
-                        </li>
-                      )
-                    })}
-                  </Paper>
               </GridContainer>
             </CardBody>
             <CardFooter>
@@ -267,9 +247,6 @@ export default function UserProfile() {
               <p className={classes.description}>
                 {profile.description}
               </p>
-              <Button color="primary" round>
-                Follow
-              </Button>
             </CardBody>
           </Card>
         </GridItem>
