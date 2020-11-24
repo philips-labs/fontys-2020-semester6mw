@@ -2,20 +2,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CoffeeTalk.Microservice.Matching.Models.Entities;
+using CoffeeTalk.Microservice.Matching.Data.Repository;
 
 namespace CoffeeTalk.Microservice.Matching.Service
 {
     public class Matcher
     {
         private List<Profile> profiles;
-        private Dictionary<string, List<string>> existingMatches;
-        private Dictionary<string, List<string>> newPossibleMatches;
+        private List<Match> existingMatches;
 
-        public Matcher(List<Profile> profiles, Dictionary<string, List<string>> existingMatches, Dictionary<string, List<string>> newPossibleMatches)
+        private readonly IProfileRepository _profileRepo;
+        private readonly IMatchesRepository _matchesRepo;
+
+        public Matcher(IProfileRepository profileRepo, IMatchesRepository matchesRepo)
         {
-            this.profiles = profiles;
-            this.existingMatches = existingMatches;
-            this.newPossibleMatches = newPossibleMatches;
+            _profileRepo = profileRepo;
+            _matchesRepo = matchesRepo;
+
+            this.profiles = _profileRepo.GetProfiles();
+            this.existingMatches = _matchesRepo.GetMatches();
         }
 
         public void CreateMatches() 
@@ -42,7 +47,7 @@ namespace CoffeeTalk.Microservice.Matching.Service
                 var possibleMatchPercentList = possibleMatchPercentDictionary.ToList();
                 possibleMatchPercentList.Sort((pair1, pair2) => pair1.Value.CompareTo(pair2.Value));
 
-                newPossibleMatches.Add(profile.Id, (from kvp in possibleMatchPercentList select kvp.Key).ToList());
+                _matchesRepo.UpsertMatch(profile.Id, (from kvp in possibleMatchPercentList select kvp.Key).ToList());
             }
         }
 
@@ -65,6 +70,20 @@ namespace CoffeeTalk.Microservice.Matching.Service
 
         private bool matchAlreadyExists(string profileId, string possibleMatchId)
         {
+            var profile = existingMatches.FirstOrDefault(x => x.ProfileId == profileId);
+
+            if (profile == null)
+            {
+                return false;
+            }
+
+            if (profile.OrderedMatches.Any(m => m == possibleMatchId))
+            {
+                return true;
+            }
+            return false;
+
+/*
             List<string> value;
             if (existingMatches.ContainsKey(profileId))
             {
@@ -76,6 +95,7 @@ namespace CoffeeTalk.Microservice.Matching.Service
             }
 
             return value.Exists(x => x == possibleMatchId);
+*/
         }
     }
 }

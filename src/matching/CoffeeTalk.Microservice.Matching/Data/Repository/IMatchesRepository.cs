@@ -6,6 +6,7 @@ namespace CoffeeTalk.Microservice.Matching.Data.Repository
 {
     public interface IMatchesRepository
     {
-         Task CreateMatch(string profileId, List<string> orderedMatches);
+        List<Match> GetMatches();
+        void UpsertMatch(string profileId, List<string> orderedMatches);
     }
 }

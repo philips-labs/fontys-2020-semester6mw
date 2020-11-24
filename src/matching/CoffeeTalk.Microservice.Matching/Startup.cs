@@ -39,7 +39,7 @@ namespace CoffeeTalk.Microservice.Matching
                     = Configuration.GetSection("MongoConnection:MatchesDatabase").Value;
             });
 
-            services.AddTransient<IProfileRepositroy, ProfileRepository>();
+            services.AddTransient<IProfileRepository, ProfileRepository>();
             services.AddTransient<IMatchesRepository, MatchesRepository>();
         }
 

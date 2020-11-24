@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace CoffeeTalk.Microservice.Matching.Data.Repository
 {
-    public class ProfileRepository : IProfileRepositroy
+    public class ProfileRepository : IProfileRepository
     {
         private readonly MongoContext _context = null;
 
@@ -18,11 +18,11 @@ namespace CoffeeTalk.Microservice.Matching.Data.Repository
             _context = new MongoContext(settings);
         }
 
-        public async Task<IEnumerable<Profile>> GetProfiles()
+        public List<Profile> GetProfiles()
         {
             try
             {
-                return await _context.Profiles.Find(_ => true).ToListAsync();
+                return _context.Profiles.Find(_ => true).ToList();
             }
             catch (Exception ex)
             {

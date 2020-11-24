@@ -4,8 +4,8 @@ using CoffeeTalk.Microservice.Matching.Models.Entities;
 
 namespace CoffeeTalk.Microservice.Matching.Data.Repository
 {
-    public interface IProfileRepositroy
+    public interface IProfileRepository
     {
-         Task<IEnumerable<Profile>> GetProfiles();
+         List<Profile> GetProfiles();
     }
 }
