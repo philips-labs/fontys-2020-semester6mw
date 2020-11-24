@@ -27,6 +27,18 @@ namespace CoffeeTalk.Microservice.Matching.Data.Repository
                 new UpdateOptions { IsUpsert = true });
         }
 
+        public Match GetMatchById(string profileId)
+        {
+            try
+            {
+                return _context.Matches.Find(match => match.ProfileId == profileId).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public List<Match> GetMatches()
         {
             try

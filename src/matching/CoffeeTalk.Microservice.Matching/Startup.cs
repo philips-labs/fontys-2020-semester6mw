@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using CoffeeTalk.Microservice.Matching.Config;
 using CoffeeTalk.Microservice.Matching.Data.Repository;
+using CoffeeTalk.Microservice.Matching.Service;
 
 namespace CoffeeTalk.Microservice.Matching
 {
@@ -41,6 +42,7 @@ namespace CoffeeTalk.Microservice.Matching
 
             services.AddTransient<IProfileRepository, ProfileRepository>();
             services.AddTransient<IMatchesRepository, MatchesRepository>();
+            services.AddTransient<IMatcher, Matcher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

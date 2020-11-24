@@ -6,7 +6,7 @@ using CoffeeTalk.Microservice.Matching.Data.Repository;
 
 namespace CoffeeTalk.Microservice.Matching.Service
 {
-    public class Matcher
+    public class Matcher : IMatcher
     {
         private List<Profile> profiles;
         private List<Match> existingMatches;
