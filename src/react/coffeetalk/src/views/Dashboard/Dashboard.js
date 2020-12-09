@@ -47,7 +47,7 @@ export default function Dashboard() {
   return (
     <div>
       <GridContainer>
-        <CreateProjectDialog />
+        
       </GridContainer>
     </div>
   );
