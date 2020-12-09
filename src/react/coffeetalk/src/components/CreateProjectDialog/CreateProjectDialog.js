@@ -6,11 +6,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
-import Button from '@material-ui/core/Button';
+import Button from 'components/CustomButtons/Button.js'
 import CustomInput from "components/CustomInput/CustomInput.js";
 import InterestAutocomplete from 'components/Autocomplete/InterestAutocomplete';
 
-export default function CreateProjectDialog(){
+export default function CreateProjectDialog(props){
 
     const [open, toggleOpen] = React.useState(false);
     const [project, setProject] = React.useState({
@@ -25,7 +25,8 @@ export default function CreateProjectDialog(){
     }
 
     const handleSubmit = (event) => {
-        console.log("submitting")
+        console.log(project)
+        props.submitcallback(project)
     }
     
     const interestCallback = (interestlist) => {
@@ -34,7 +35,7 @@ export default function CreateProjectDialog(){
 
     return(
         <div>
-            <button onClick={() => toggleOpen(true)}>Create project</button>
+            <Button color="primary" onClick={() => toggleOpen(true)}>Create project</Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <form onSubmit={e => e.preventDefault()}>
                     <DialogTitle id="form-dialog-title">Create a new project</DialogTitle>

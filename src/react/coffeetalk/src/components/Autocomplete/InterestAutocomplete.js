@@ -71,8 +71,10 @@ export default function InterestAutocomplete() {
 
     const handleKeypress = (event) => {
         if(event.key === 'Enter'){
+            if(value != null){
             setInterests(interests => [...interests, value])
             setValue(null)
+            }
         }
     }
 

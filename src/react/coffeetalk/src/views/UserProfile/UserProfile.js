@@ -13,13 +13,15 @@ import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import Autocomplete from '@material-ui/lab'
-
+import Autocomplete, { Alert } from '@material-ui/lab'
+import Snackbar from '@material-ui/core/Snackbar';
 
 import avatar from "assets/img/faces/marc.jpg";
 import { Paper, ThemeProvider, List, Chip, Input, ListItemText, ListItem, Avatar, Icon } from "@material-ui/core";
 import CardIcon from "components/Card/CardIcon";
 import InterestAutocomplete from "components/Autocomplete/InterestAutocomplete";
+import CreateProjectDialog from "components/CreateProjectDialog/CreateProjectDialog";
+import { number } from "prop-types";
 
 const useStyles = makeStyles((styles) => ({
   cardCategoryWhite: {
@@ -62,21 +64,14 @@ const useStyles = makeStyles((styles) => ({
 
 export default function UserProfile(props) {
   const classes = useStyles();
-  const [chipData, setChipData] = React.useState([
-    {key: 0, label: 'Angular', active: false},
-    {key: 1, label: 'React', active: false},
-    {key: 2, label: 'JQuery', active: true},
-    {key: 3, label: 'Vue.js', active: false},
-    {key: 4, label: 'C#', active: false},
-  ]);
-
   const [projects, setProjects] = React.useState([
-    {key: 0, name: 'Project1', description: 'testdescription', dataset: [{key: 0, label: 'Angular', active: false},{key: 1, label: 'React', active: false},{key: 2, label: 'JQuery', active: true},{key: 3, label: 'Vue.js', active: false},{key: 4, label: 'C#', active: false}]},
-    {key: 1, name: 'Project2', description: 'description 2', dataset: [{key: 0, label: 'Angular', active: false},{key: 1, label: 'React', active: false},{key: 2, label: 'JQuery', active: true},{key: 3, label: 'Vue.js', active: false},{key: 4, label: 'C#', active: false}]},
-    ])
+    { key: 0, name: 'Project1', description: 'testdescription', dataset: [{ key: 0, label: 'Angular', active: false }, { key: 1, label: 'React', active: false }, { key: 2, label: 'JQuery', active: true }, { key: 3, label: 'Vue.js', active: false }, { key: 4, label: 'C#', active: false }] },
+    { key: 1, name: 'Project2', description: 'description 2', dataset: [{ key: 0, label: 'Angular', active: false }, { key: 1, label: 'React', active: false }, { key: 2, label: 'JQuery', active: true }, { key: 3, label: 'Vue.js', active: false }, { key: 4, label: 'C#', active: false }] },
+  ])
 
   const [count, setCount] = React.useState(0);
 
+  const [changesmade, setChangesmade] = React.useState(false);
 
   /*const newproject = {
     name: 'p',
@@ -104,10 +99,7 @@ export default function UserProfile(props) {
     age: 39
   })
 
-  const handleClick = (c) => {
-    chipData[c].active = !chipData[c].active
-    setCount(count + 1)
-  }
+
 
   const handleNameChange = (event) => {
     newproject.name = event.target.value;
@@ -117,36 +109,49 @@ export default function UserProfile(props) {
     newproject.description = event.target.value;
   }
 
-  const handleNewProjectClick = () => {
-    projects.push(newproject);
-    setCount(count + 1)
-  }
 
   const handleFirstNameChange = (event) => {
-    setProfile({...profile, firstname: event.target.value})
+    setProfile({ ...profile, firstname: event.target.value })
+    setChangesmade(true)
   }
 
   const handleLastNameChange = (event) => {
-    setProfile({...profile, lastname: event.target.value})
+    setProfile({ ...profile, lastname: event.target.value })
+    setChangesmade(true)
   }
 
   const handleAgeChange = (event) => {
-    setProfile({...profile, age: event.target.value})
+    setProfile({ ...profile, age: event.target.value })
+    setChangesmade(true)
   }
 
   const handleProfileDescChange = (event) => {
-    setProfile({...profile, description: event.target.value})
+    setProfile({ ...profile, description: event.target.value })
+    setChangesmade(true)
   }
 
   const handleUpdateProfile = () => {
-    setCount(count + 1)
-    console.log(profile)
+    setChangesmade(false)
   }
 
   const handleProjectRemove = (key) => {
-    
+
     projects.splice(key, 1)
     setCount(count + 1)
+  }
+
+  const createprojectcallback = (project) => {
+    console.log(project)
+    projects.push(project);
+    setCount(count + 1)
+  }
+  
+  const RenderChangesmade = () => {
+    if(changesmade){
+      return(
+        <Alert severity="warning">You have unsaved changes</Alert>
+      )
+    }
   }
 
   return (
@@ -163,7 +168,7 @@ export default function UserProfile(props) {
                 <GridItem xs={12} sm={12} md={6}>
                   <CustomInput
                     labelText="First Name"
-                    
+
                     id="first-name"
                     formControlProps={{
                       fullWidth: true
@@ -171,6 +176,7 @@ export default function UserProfile(props) {
                     inputProps={{
                       onChange: handleFirstNameChange,
                       value: profile.firstname
+                      
                     }}
                   />
                 </GridItem>
@@ -198,35 +204,40 @@ export default function UserProfile(props) {
                     }}
                     inputProps={{
                       onChange: handleAgeChange,
-                      value: profile.age
+                      value: profile.age,
+                      type: "number"
                     }}
                   />
                 </GridItem>
-               
+
               </GridContainer>
               <GridContainer>
                 <GridItem xs={12}>
                   <CustomInput
-                      labelText="Profile description"
-                      id="profiledescription"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                      inputProps={{
-                        multiline: true,
-                        rows: 3,
-                        onChange: handleProfileDescChange,
-                        value: profile.description
-                      }}
-                      >
-                    </CustomInput>
+                    labelText="Profile description"
+                    id="profiledescription"
+                    formControlProps={{
+                      fullWidth: true
+                    }}
+                    inputProps={{
+                      multiline: true,
+                      rows: 3,
+                      onChange: handleProfileDescChange,
+                      value: profile.description
+                    }}
+                  >
+                  </CustomInput>
                 </GridItem>
               </GridContainer>
               <GridContainer>
+                <GridItem xs={12}>
                 <h4>Professional interests</h4>
+                </GridItem>
               </GridContainer>
               <GridContainer>
+              <GridItem xs={12}>
                 <InterestAutocomplete></InterestAutocomplete>
+                </GridItem>
               </GridContainer>
             </CardBody>
             <CardFooter>
@@ -248,7 +259,11 @@ export default function UserProfile(props) {
                 {profile.description}
               </p>
             </CardBody>
+            <CardFooter>
+              
+            </CardFooter>
           </Card>
+          {RenderChangesmade()}
         </GridItem>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
@@ -258,92 +273,30 @@ export default function UserProfile(props) {
             </CardHeader>
             <CardBody>
               <GridContainer>
-              <List className={classes.listroot}>   
-                {
-                  projects.map((project) => {
-                    return(
-                      <ListItem>
-                        <GridItem xs={12} md={11}>
-                        <ListItemText 
-                          primary={project.name}
-                          secondary={project.description}
-                          >
-                        </ListItemText>
-                        </GridItem>
-                        <GridItem xs={12} md={1}>
-                          <DeleteForeverIcon onClick={() => handleProjectRemove(project.key)}></DeleteForeverIcon>
-                          </GridItem>                       
-                      </ListItem>
-                    )
-                  })
-                }
-              </List>
-              </GridContainer>
-            </CardBody>
-            <CardFooter>
-
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Add Project</h4>
-            </CardHeader>
-            <CardBody>
-            <GridContainer>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Project name"
-                    id="projectname"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      onChange: handleNameChange
-                    }}
-                  ></CustomInput>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={8}></GridItem>
-                <GridItem xs={12} sm={12} md={8}>
-                  <CustomInput
-                    labelText="Project description"
-                    id="projectdescription"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      multiline: true,
-                      rows: 5,
-                      onChange: handleDescChange
-                    }}
-                    >
-                  </CustomInput>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}></GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <Paper component="ul" className={classes.root}>
-                    {chipData.map((data) => {
-                      let icon;
-                      return(
-                        <li key={data.key}>
-                          <Chip
-                            color={"primary"}
-                            onClick={() => handleClick(data.key)}
-                            variant={data.active ? "default" : "outlined"}
-                            icon={icon}
-                            label={data.label}
-                            className={classes.chip}>
-                          </Chip>
-                        </li>
+                <List className={classes.listroot}>
+                  {
+                    projects.map((project) => {
+                      return (
+                        <ListItem>
+                          <GridItem xs={12} md={11}>
+                            <ListItemText
+                              primary={project.name}
+                              secondary={project.description}
+                            >
+                            </ListItemText>
+                          </GridItem>
+                          <GridItem xs={12} md={1}>
+                            <DeleteForeverIcon onClick={() => handleProjectRemove(project.key)}></DeleteForeverIcon>
+                          </GridItem>
+                        </ListItem>
                       )
-                    })}
-                  </Paper>
-                </GridItem>
+                    })
+                  }
+                </List>
               </GridContainer>
             </CardBody>
             <CardFooter>
-              <Button color="primary" onClick={() => handleNewProjectClick()}>Add project</Button>
+              <CreateProjectDialog submitcallback={createprojectcallback}></CreateProjectDialog>
             </CardFooter>
           </Card>
         </GridItem>

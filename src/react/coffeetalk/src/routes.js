@@ -18,9 +18,11 @@
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
+import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
+import Matching from "views/Matching/Matching.js"
 // core components/views for RTL layout
 
 const dashboardRoutes = [
@@ -32,12 +34,20 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
+    path: "/matching",
+    name: "Matching",
+    icon: EmojiPeopleIcon,
+    component: Matching,
+    layout: "/admin"
+  },
+  {
     path: "/user",
     name: "User Profile",
     icon: Person,
     component: UserProfile,
     layout: "/admin"
   }
+
 ];
 
 export default dashboardRoutes;
