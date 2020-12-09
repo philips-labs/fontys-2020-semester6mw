@@ -17,6 +17,8 @@ namespace CoffeeTalk.Microservice.Profile.Models.Entities
         
         public int Age { get; set; }
 
+        public string Description { get; set; }
+
         public ProfileImage ProfileImage { get; set; }
 
         [BsonDateTimeOptions]
@@ -26,11 +28,12 @@ namespace CoffeeTalk.Microservice.Profile.Models.Entities
 
         public List<Project> PreviousProjects { get; set; } = new List<Project>();
 
-        public ProfileEntity(string firstName, string lastName, int age)
+        public ProfileEntity(string firstName, string lastName, int age, string description)
         {
             FirstName = firstName;
             LastName = lastName;
             Age = age;
+            Description = description;
         }
     }
 }

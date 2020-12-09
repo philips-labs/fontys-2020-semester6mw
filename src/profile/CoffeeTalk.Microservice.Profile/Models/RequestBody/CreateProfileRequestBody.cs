@@ -5,5 +5,6 @@ namespace CoffeeTalk.Microservice.Profile.Models.RequestBody
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Age { get; set; }
+        public string Description { get; set; }
     }
 }

@@ -54,8 +54,9 @@ namespace CoffeeTalk.Microservice.Profile.Controllers
             string firstName = createProfileRequestBody.FirstName;
             string lastName = createProfileRequestBody.LastName;
             int age = createProfileRequestBody.Age;
+            string description = createProfileRequestBody.Description;
 
-            _profileRepo.CreateProfile(firstName, lastName, age);
+            _profileRepo.CreateProfile(firstName, lastName, age, description);
         }
     }
 }
