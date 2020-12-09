@@ -9,6 +9,6 @@ namespace CoffeeTalk.Microservice.Profile.Data.Repository
         Task<IEnumerable<ProfileEntity>> GetAllProfiles();
         Task<ProfileEntity> GetProfile(string id);
         Task<bool> UpdateProfile(string id, List<string> interests, List<Project> previousProjects);
-        Task CreateProfile(string firstName, string lastName, int age);
+        Task CreateProfile(string firstName, string lastName, int age, string description);
     }
 }

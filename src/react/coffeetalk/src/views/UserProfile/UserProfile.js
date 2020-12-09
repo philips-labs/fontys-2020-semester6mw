@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -92,12 +92,19 @@ export default function UserProfile(props) {
     age: 39
   }*/
 
-  const [profile, setProfile] = React.useState({
-    firstname: 'Alec',
-    lastname: 'Thompson',
-    description: 'Dont be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...',
-    age: 39
-  })
+  const profileUrl = "http://localhost:5000/api/Profile/5fbd179cc96d991f1b9b5052";
+
+  const [profile, setProfile] = React.useState({})
+
+  React.useEffect(() => {
+    getProfileWithFetch();
+  }, []);
+
+  const getProfileWithFetch = async () => {
+    const response = await fetch(profileUrl);
+    const jsonData = await response.json();
+    setProfile(jsonData);
+  };
 
 
 
@@ -175,8 +182,7 @@ export default function UserProfile(props) {
                     }}
                     inputProps={{
                       onChange: handleFirstNameChange,
-                      value: profile.firstname
-                      
+                      value: profile.firstName
                     }}
                   />
                 </GridItem>
@@ -189,7 +195,7 @@ export default function UserProfile(props) {
                     }}
                     inputProps={{
                       onChange: handleLastNameChange,
-                      value: profile.lastname
+                      value: profile.lastName
                     }}
                   />
                 </GridItem>
@@ -253,7 +259,7 @@ export default function UserProfile(props) {
               </a>
             </CardAvatar>
             <CardBody profile>
-              <h4 className={classes.cardTitle}>{profile.firstname} {profile.lastname}</h4>
+              <h4 className={classes.cardTitle}>{profile.firstName} {profile.lastName}</h4>
               <p>Age: {profile.age}</p>
               <p className={classes.description}>
                 {profile.description}

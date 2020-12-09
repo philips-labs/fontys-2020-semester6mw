@@ -30,9 +30,9 @@ namespace CoffeeTalk.Microservice.Profile.Data.Repository
             }
         }
 
-        public async Task CreateProfile(string firstName, string lastName, int age)
+        public async Task CreateProfile(string firstName, string lastName, int age, string description)
         {
-            ProfileEntity profileEntity = new ProfileEntity(firstName, lastName, age);
+            ProfileEntity profileEntity = new ProfileEntity(firstName, lastName, age, description);
 
             try
             {
