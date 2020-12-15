@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   name: profile-microservice-deployment
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: profile-microservice-pod
@@ -12,26 +13,17 @@ spec:
       labels:
         app: profile-microservice-pod
     spec:
-      replicas: 3
       containers:
       - name: profile-microservice-container
-        image: coffeetalkcr.azurecr.io/profile:v1
+        image: coffeetalkcr.azurecr.io/profile:0.1
         resources:
           limits:
             memory: "128Mi"
             cpu: "500m"
         ports:
         - containerPort: 80
----
-# Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: profile-microservice-service
-spec:
-  selector:
-    app: profile-microservice-pod
-  ports:
-  - port: 5000
-    targetPort: 80
-  type: LoadBalancer
+        env:
+        - name: MongoConnection__ConnectionString
+          value: "mongodb://mongodb:27017"
+        - name: MongoConnection__DatabaseName
+          value: "profile_db"

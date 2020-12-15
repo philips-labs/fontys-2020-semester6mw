@@ -34,9 +34,9 @@ namespace CoffeeTalk.Microservice.Profile
             services.Configure<ProfileDatabaseSettings>(options =>
             {
                 options.ConnectionString
-                    = Configuration.GetSection("MongoConnection:ConnectionString").Value;
+                    = Environment.GetEnvironmentVariable("MongoConnection:ConnectionString");
                 options.DatabaseName
-                    = Configuration.GetSection("MongoConnection:DatabaseName").Value;
+                    = Environment.GetEnvironmentVariable("MongoConnection:DatabaseName");
             });
 
             services.AddSwaggerGen();

@@ -1,0 +1,8 @@
+# ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: profile-microservice-configmap
+data:
+  MongoConnection__ConnectionString: "mongodb://mongodb:27017"
+  MongoConnection__DatabaseName: "profile_db"

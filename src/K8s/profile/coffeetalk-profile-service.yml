@@ -1,0 +1,12 @@
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: profile-microservice-service
+spec:
+  selector:
+    app: profile-microservice-pod
+  ports:
+  - port: 5000
+    targetPort: 80
+  type: LoadBalancer

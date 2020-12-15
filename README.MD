@@ -39,8 +39,29 @@ $ helm install mongodb \
     --set auth.rootPassword=password123,initdbScriptsConfigMap=init-mongodb-configmap \
     bitnami/mongodb
 ```
+To uninstall the chart do:
+```
+helm delete mongodb
+```
+
+For cheese:
+```
+$ helm install mongodb \
+    --set auth.enabled=false,initdbScriptsConfigMap=init-mongodb-configmap \
+    bitnami/mongodb
+```
+
 Sources used:
 - https://github.com/bitnami/bitnami-docker-mongodb/issues/217
 - https://github.com/bitnami/charts/tree/master/bitnami/mongodb#parameters
 - https://hackernoon.com/kubernetes-installing-mongodb-replicaset-on-azure-using-helm-20f6bfcf92b3
 
+## Profile Service
+Than to get the profile service up and running we use Azure pipelines to push the images to a Azure Container Registry (acr). But we also use a configmap for the setup that has to be done, for connecting to MongoDB.
+
+To get the configmap up, do:
+```
+kubectl apply -f coffeetalk-profile-configmap.yml
+```
+
+We also use a deployment and a service for the profile microservice. But these are also automated with Azure Pipelines.
