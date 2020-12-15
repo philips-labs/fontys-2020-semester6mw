@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-mongodb-configmap
+data:
+  ensure-users.js: |
+    
