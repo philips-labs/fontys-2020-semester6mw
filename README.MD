@@ -26,8 +26,14 @@ When there you can run:
 # Kubernetes (Azure)
 This project also runs on Azure at this current moment.
 
-## Step 1 
-Getting MongoDB up and running that can be done by doing the following:
+## MongoDB
+The first step is to get MongoDB up and running, for that we have to apply the config map to the cluster, for the setup that is required once mongo is on the cluster. You can apply the config map by doing this:
+```
+kubectl apply -f init-mongo-configmap.yml
+```
+This configmap contains all the extra setup required for mongo to get initialized.
+
+After that we can use helm to install a mongodb chart for us on the kubernetes cluster. If you want to know more about installing helm charts on a kubernetes cluster, check out [helm](https://helm.sh/docs/intro/quickstart/).
 ```
 $ helm install mongodb \
     --set auth.rootPassword=password123,initdbScriptsConfigMap=init-mongodb-configmap \
