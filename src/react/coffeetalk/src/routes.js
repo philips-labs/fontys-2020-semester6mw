@@ -23,9 +23,17 @@ import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
 import Matching from "views/Matching/Matching.js"
+import Login from "views/Login/Login";
 // core components/views for RTL layout
 
 const dashboardRoutes = [
+  {
+    path: "/login",
+    name: "Login",
+    icon: Person,
+    component: Login,
+    layout: "/admin"
+  },
   {
     path: "/dashboard",
     name: "Dashboard",

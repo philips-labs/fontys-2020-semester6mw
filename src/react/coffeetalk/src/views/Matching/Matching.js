@@ -29,77 +29,62 @@ import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
-
+import Communication from "Communication"
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
-import {  ListItem, ListItemText, List } from "@material-ui/core";
+import { ListItem, ListItemText, List } from "@material-ui/core";
 import Button from "components/CustomButtons/Button.js";
 import MatchDialog from "components/MatchDialog/MatchDialog";
 
 const useStyles = makeStyles((styles) => ({
     cardCategoryWhite: {
-      color: "rgba(255,255,255,.62)",
-      margin: "0",
-      fontSize: "14px",
-      marginTop: "0",
-      marginBottom: "0"
+        color: "rgba(255,255,255,.62)",
+        margin: "0",
+        fontSize: "14px",
+        marginTop: "0",
+        marginBottom: "0"
     },
     cardTitleWhite: {
-      color: "#FFFFFF",
-      marginTop: "0px",
-      minHeight: "auto",
-      fontWeight: "300",
-      fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-      marginBottom: "3px",
-      textDecoration: "none"
+        color: "#FFFFFF",
+        marginTop: "0px",
+        minHeight: "auto",
+        fontWeight: "300",
+        fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+        marginBottom: "3px",
+        textDecoration: "none"
     },
     root: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexWrap: 'wrap',
-      listStyle: 'none',
-      padding: styles.spacing(0.5),
-      margin: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        listStyle: 'none',
+        padding: styles.spacing(0.5),
+        margin: 0,
     },
     chip: {
-      margin: styles.spacing(0.5),
+        margin: styles.spacing(0.5),
     },
     listroot: {
-      width: '100%',
-      maxWidth: 3600,
-      boxShadow: 3,
+        width: '100%',
+        maxWidth: 3600,
+        boxShadow: 3,
     },
     image: {
-      maxWidth: 200,
-      maxHeight: 200,
+        maxWidth: 200,
+        maxHeight: 200,
     },
 
-  }));
+}));
 
 
 
-const hardcodedPotentialMatches = [
-    {interests: ["C#", "Vue.js"], projects: [{name: "React frontend project", desc: "A react frontend application that was used in order to learn the react framework. this application is purely for testing purposes"}, {name: "Productivity increasing software", desc: "this software will allow its user to massively increase its productivity. How does it manage to do this? its an agenda."}]},
-    {interests: ["C#","Java", "Vue.js"], projects: [{name: "Angular testing component", desc: "This component allows the user to test any angular based application for compiler errors. not very usefull."}, {name:"Hardware limit tester", desc:"it tests the limit of a piece of hardware. The clue is in the name."}]},
-    {interests: ["Java", "Vue.js"], projects: [{name: "generic project 1", desc: "writing witty sample texts is harder then it looks"}, {name: "generic project 2", desc:"still here huh? props to you. HAH get it? props, react. hahaha im so funny."}]},
-    {interests: ["React", "Angular"], projects: [{name: "generic project 3", desc: "so apparently theres a brown note that when played causes bowelmovement. (the more you know)"}, {name: "generic project 4", desc:"Hello world, meet application."}]},
-]
 
 /*    {interests: ["C#", "Vue.js"], projects: ["React frontend project", "Productivity increasing software"]},
     {interests: ["C#","Java", "Vue.js"], projects: ["Angular testing component", "Hardware limit tester"]},
     {interests: ["Java", "Vue.js"], projects: ["generic project 1", "generic project 2"]},
     {interests: ["React", "Angular"], projects: ["generic project 3", "generic project 4"]},*/
 
-const hardcodedMatch = {
-    firstname: "Christine",
-    lastname: "Anderson",
-    age: "28",
-    description: "Dont be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...",
-    interests: ["C#", "Vue.js", "Java"]
-}
-const hardcodedMatchedInterests = {
-    interests: ["C#, Java"]
-}
+
 
 
 
@@ -108,34 +93,96 @@ const hardcodedMatchedInterests = {
 export default function Matching() {
 
     const classes = useStyles();
+    const com = new Communication();
+
+
+    const [hardcodedMatch, sethardcodedmatch] = React.useState({firstname: "Mark",
+        lastname: "Veltman",
+        age: "24",
+        description: "description",
+        interests: ["React", "C#"]})
+    
+    const hmmark = {
+        firstname: "Mark",
+        lastname: "Veltman",
+        age: "24",
+        description: "description",
+        interests: ["React", "C#"]
+    }
+    const hmfriso = {
+        firstname: "Friso",
+        lastname: "Westenbrink",
+        age: "23",
+        description: "description",
+        interests: ["Java", "Vue.js"]
+    }
+
+
+
+
+    const [hardcodedMatchedInterests, sethardcodedinterests] = React.useState([{ interests: ["C#", "Vue.js"], projects: [{ name: "React frontend project", desc: "A react frontend application that was used in order to learn the react framework. this application is purely for testing purposes" }, { name: "Productivity increasing software", desc: "this software will allow its user to massively increase its productivity. How does it manage to do this? its an agenda." }] },
+    { interests: ["C#", "Java", "Vue.js"], projects: [{ name: "Angular testing component", desc: "This component allows the user to test any angular based application for compiler errors. not very usefull." }, { name: "Hardware limit tester", desc: "it tests the limit of a piece of hardware. The clue is in the name." }] },
+    { interests: ["React", "C#"], projects: [{ name: "testproject1", desc: "testproject1" }, { name: "testproject2", desc: "testproject2" }] }])
+    const hardcodedPotentialMatchesmark = [
+        { interests: ["C#", "Vue.js"], projects: [{ name: "React frontend project", desc: "A react frontend application that was used in order to learn the react framework. this application is purely for testing purposes" }, { name: "Productivity increasing software", desc: "this software will allow its user to massively increase its productivity. How does it manage to do this? its an agenda." }] },
+        { interests: ["C#", "Java", "Vue.js"], projects: [{ name: "Angular testing component", desc: "This component allows the user to test any angular based application for compiler errors. not very usefull." }, { name: "Hardware limit tester", desc: "it tests the limit of a piece of hardware. The clue is in the name." }] },
+        { interests: ["React", "C#"], projects: [{ name: "testproject1", desc: "testproject1" }, { name: "testproject2", desc: "testproject2" }] },
+    ]
+    
+    const hardcodedPotentialMatchesFriso = [
+        { interests: ["C#", "Vue.js"], projects: [{ name: "React frontend project", desc: "A react frontend application that was used in order to learn the react framework. this application is purely for testing purposes" }, { name: "Productivity increasing software", desc: "this software will allow its user to massively increase its productivity. How does it manage to do this? its an agenda." }] },
+        { interests: ["C#", "Java", "Vue.js"], projects: [{ name: "Angular testing component", desc: "This component allows the user to test any angular based application for compiler errors. not very usefull." }, { name: "Hardware limit tester", desc: "it tests the limit of a piece of hardware. The clue is in the name." }] },
+        { interests: ["Java", "Vue.js"], projects: [{ name: "testproject1", desc: "testproject1" }, { name: "testproject2", desc: "testproject2" }] },
+    ]
+
+
+
+    const [op, setopen] = React.useState(false);
+
+
+    const handleKey = (event) => {
+        if(event.key === 'z'){
+            sethardcodedmatch(hmmark);
+            sethardcodedinterests(hardcodedPotentialMatchesmark);
+        }
+        if(event.key === 'x'){
+            sethardcodedmatch(hmfriso);
+            sethardcodedinterests(hardcodedPotentialMatchesFriso);
+        }
+        if(event.key === 'v'){
+            setopen(true);
+            setCount(count + 1);
+        }
+    }
+
 
     const RetrieveNextMatch = () => {
-        if(hardcodedPotentialMatches.length <1){
-            return(
+        if (hardcodedMatchedInterests.length < 1) {
+            return (
                 <div>
                     <label>No more matches were found</label>
                 </div>
             )
-        }else{
-            var mat = hardcodedPotentialMatches[0]
-            return(
-                <div>
-                    <GridContainer>
+        } else {
+            var mat = hardcodedMatchedInterests[0]
+            return (
+                <div >
+                    <GridContainer >
                         <GridItem xs={12} sm={12} md={6}>
-                        <h4>Professional interests</h4>
+                            <h4>Professional interests</h4>
                             <List className={classes.listroot}>
-                            {
-                            mat.interests.map((interest) => {
-                                return(
-                                    <ListItem>
-                                        <ListItemText
-                                        primary={interest}>
-                                            
-                                        </ListItemText>
-                                    </ListItem>
-                                )
-                            }) 
-                            }
+                                {
+                                    mat.interests.map((interest) => {
+                                        return (
+                                            <ListItem>
+                                                <ListItemText
+                                                    primary={interest}>
+
+                                                </ListItemText>
+                                            </ListItem>
+                                        )
+                                    })
+                                }
                             </List>
                         </GridItem>
                         <GridItem xs={12} sm={12} md={6}>
@@ -143,11 +190,11 @@ export default function Matching() {
                             <List>
                                 {
                                     mat.projects.map((project) => {
-                                        return(
+                                        return (
                                             <ListItem>
                                                 <ListItemText
-                                                primary={project.name} secondary={project.desc}>
-    
+                                                    primary={project.name} secondary={project.desc}>
+
                                                 </ListItemText>
                                             </ListItem>
                                         )
@@ -161,44 +208,44 @@ export default function Matching() {
         }
     }
 
-  const RejectMatch = () => {
-    hardcodedPotentialMatches.splice(0,1)
-    setCount(count + 1)
-}
+    const RejectMatch = () => {
+        hardcodedMatchedInterests.splice(0, 1)
+        setCount(count + 1)
+    }
 
-const AcceptMatch = () => {
-    hardcodedPotentialMatches.splice(0,1)
-    setCount(count + 1)
-}
+    const AcceptMatch = () => {
+        hardcodedMatchedInterests.splice(0, 1)
+        setCount(count + 1)
+    }
 
-const [count, setCount] = React.useState(0);
-  return (
-    <div>
+    const [count, setCount] = React.useState(0);
+    return (
+        <div onKeyPress={handleKey}>
 
-        <GridContainer>
-        <MatchDialog match={hardcodedMatch}  matchinterests={hardcodedMatchedInterests}></MatchDialog>
-        </GridContainer>
-      <GridContainer>
-            <Card>
-                <CardHeader color="primary">
-                    <h4 className={classes.cardTitleWhite}>Potential matches</h4>
-                    <p className={classes.cardCategoryWhite}>These matches were found based on your professional interests and projects</p>
-                </CardHeader>
-                <CardBody>
-                    {RetrieveNextMatch()}
-                </CardBody>
-                <CardFooter>
-                    <GridContainer>
-                    <GridItem  md={6}>
-                        <Button color="primary" onClick={AcceptMatch}>Match</Button>
-                    </GridItem>
-                    <GridItem  md={6}>
-                        <Button color="primary" onClick={RejectMatch}>Uninterested</Button>
-                    </GridItem>
-                    </GridContainer>
-                </CardFooter>
-            </Card>
-      </GridContainer>
-    </div>
-  );
+            <GridContainer>
+                <MatchDialog open={op} match={hardcodedMatch} matchinterests={hardcodedMatchedInterests}></MatchDialog>
+            </GridContainer>
+            <GridContainer>
+                <Card>
+                    <CardHeader color="primary">
+                        <h4 className={classes.cardTitleWhite}>Potential matches</h4>
+                        <p className={classes.cardCategoryWhite}>These matches were found based on your professional interests and projects</p>
+                    </CardHeader>
+                    <CardBody>
+                        {RetrieveNextMatch()}
+                    </CardBody>
+                    <CardFooter>
+                        <GridContainer>
+                            <GridItem md={6}>
+                                <Button color="primary" onClick={AcceptMatch}>Match</Button>
+                            </GridItem>
+                            <GridItem md={6}>
+                                <Button color="primary" onClick={RejectMatch}>Uninterested</Button>
+                            </GridItem>
+                        </GridContainer>
+                    </CardFooter>
+                </Card>
+            </GridContainer>
+        </div>
+    );
 }
