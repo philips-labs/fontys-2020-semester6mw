@@ -15,13 +15,15 @@ import CardFooter from "components/Card/CardFooter.js";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Autocomplete, { Alert } from '@material-ui/lab'
 import Snackbar from '@material-ui/core/Snackbar';
+import Communication from "Communication"
 
 import avatar from "assets/img/faces/marc.jpg";
 import { Paper, ThemeProvider, List, Chip, Input, ListItemText, ListItem, Avatar, Icon } from "@material-ui/core";
 import CardIcon from "components/Card/CardIcon";
-import InterestAutocomplete from "components/Autocomplete/InterestAutocomplete";
+import InterestAutocomplete from "components/Autocomplete/Autocomplete2.js";
 import CreateProjectDialog from "components/CreateProjectDialog/CreateProjectDialog";
 import { number } from "prop-types";
+import apiconfig from "APIconfig";
 
 const useStyles = makeStyles((styles) => ({
   cardCategoryWhite: {
@@ -60,14 +62,16 @@ const useStyles = makeStyles((styles) => ({
     maxWidth: 200,
     maxHeight: 200,
   },
+  chip: {
+
+  }
 }));
 
 export default function UserProfile(props) {
   const classes = useStyles();
-  const [projects, setProjects] = React.useState([
-    { key: 0, name: 'Project1', description: 'testdescription', dataset: [{ key: 0, label: 'Angular', active: false }, { key: 1, label: 'React', active: false }, { key: 2, label: 'JQuery', active: true }, { key: 3, label: 'Vue.js', active: false }, { key: 4, label: 'C#', active: false }] },
-    { key: 1, name: 'Project2', description: 'description 2', dataset: [{ key: 0, label: 'Angular', active: false }, { key: 1, label: 'React', active: false }, { key: 2, label: 'JQuery', active: true }, { key: 3, label: 'Vue.js', active: false }, { key: 4, label: 'C#', active: false }] },
-  ])
+  const com = new Communication();
+  const [projects, setProjects] = React.useState([])
+
 
   const [count, setCount] = React.useState(0);
 
@@ -85,28 +89,9 @@ export default function UserProfile(props) {
     dataset: []
   })
 
-  /*const profile = {
-    firstname: 'Alec',
-    lastname: 'Thompson',
-    description: 'Dont be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...',
-    age: 39
-  }*/
+  const [interests, setInterests] = React.useState([])
 
-  const profileUrl = "http://localhost:5000/api/Profile/5fbd179cc96d991f1b9b5052";
-
-  const [profile, setProfile] = React.useState({})
-
-  React.useEffect(() => {
-    getProfileWithFetch();
-  }, []);
-
-  const getProfileWithFetch = async () => {
-    const response = await fetch(profileUrl);
-    const jsonData = await response.json();
-    setProfile(jsonData);
-  };
-
-
+  const [user, setUser] = React.useState(JSON.parse(sessionStorage.getItem("user")))
 
   const handleNameChange = (event) => {
     newproject.name = event.target.value;
@@ -116,197 +101,261 @@ export default function UserProfile(props) {
     newproject.description = event.target.value;
   }
 
+  const handleInterestsCallback = (value) => {
+    console.log(value);
+    setInterests(interests.concat(value));
+    setCount(count + 1)
+  }
 
   const handleFirstNameChange = (event) => {
-    setProfile({ ...profile, firstname: event.target.value })
+    setUser({ ...user, firstName: event.target.value })
     setChangesmade(true)
   }
 
   const handleLastNameChange = (event) => {
-    setProfile({ ...profile, lastname: event.target.value })
+    setUser({ ...user, lastName: event.target.value })
     setChangesmade(true)
   }
 
   const handleAgeChange = (event) => {
-    setProfile({ ...profile, age: event.target.value })
+    setUser({ ...user, age: event.target.value })
     setChangesmade(true)
   }
 
   const handleProfileDescChange = (event) => {
-    setProfile({ ...profile, description: event.target.value })
+    console.log(event)
+    setUser({ ...user, description: event.target.value })
     setChangesmade(true)
   }
 
   const handleUpdateProfile = () => {
+    com.updateUser(user)
+    com.updateInterests(user.id, JSON.parse(sessionStorage.getItem("user")).interests)
     setChangesmade(false)
   }
 
   const handleProjectRemove = (key) => {
+    var array = [...projects];
+    var index = array.indexOf(key);
+    array.splice(index, 1);
+    setProjects(array);
+  }
 
-    projects.splice(key, 1)
-    setCount(count + 1)
+  const handleDeleteInterest = (data) => {
+    var array = [...interests];
+    var index = array.indexOf(data);
+    console.log(index + "  " + array);
+    if (index !== -1) {
+      setInterests(array.splice(index, 1))
+    }
   }
 
   const createprojectcallback = (project) => {
     console.log(project)
-    projects.push(project);
+    setProjects(projects.concat(project))
     setCount(count + 1)
   }
-  
+
   const RenderChangesmade = () => {
-    if(changesmade){
-      return(
+    if (changesmade) {
+      return (
         <Alert severity="warning">You have unsaved changes</Alert>
       )
     }
   }
 
+
+
+
+  const renderInterests = () => {
+    return (
+      interests.map((data) =>
+          <Chip
+            color={"primary"}
+            onClick={() => handleDeleteInterest(data)}
+            variant={"default"}
+            label={data.language}
+            className={classes.chip}>
+          </Chip>
+      ))
+  }
+
+  const renderProjects = () => {
+    return(
+      projects.map((project) => (
+        <ListItem>
+          <GridItem xs={12} md={11}>
+            <ListItemText
+              primary={project.projectName}
+              secondary={project.projectDescription}
+            >
+            </ListItemText>
+          </GridItem>
+          <GridItem xs={12} md={1}>
+            <DeleteForeverIcon onClick={() => handleProjectRemove(project)}></DeleteForeverIcon>
+          </GridItem>
+        </ListItem>
+      ))
+    )
+  }
+
+
+  const renderProfile = () => {
+
+    return (
+      <div>
+        <GridContainer>
+          <GridItem xs={12} sm={12} md={8}>
+            <Card>
+              <CardHeader color="primary">
+                <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
+                <p className={classes.cardCategoryWhite}>Complete your profile</p>
+              </CardHeader>
+              <CardBody>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <CustomInput
+                      labelText="First Name"
+
+                      id="first-name"
+                      formControlProps={{
+                        fullWidth: true
+                      }}
+                      inputProps={{
+                        onChange: handleFirstNameChange,
+                        value: user.firstName
+                      }}
+                    />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <CustomInput
+                      labelText="Last Name"
+                      id="last-name"
+                      formControlProps={{
+                        fullWidth: true
+                      }}
+                      inputProps={{
+                        onChange: handleLastNameChange,
+                        value: user.lastName
+                      }}
+                    />
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <CustomInput
+                      labelText="Age"
+                      id="age"
+                      formControlProps={{
+                        fullWidth: false
+                      }}
+                      inputProps={{
+                        onChange: handleAgeChange,
+                        value: user.age,
+                        type: "number"
+                      }}
+                    />
+                  </GridItem>
+
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12}>
+                    <CustomInput
+                      labelText="Profile description"
+                      id="profiledescription"
+                      formControlProps={{
+                        fullWidth: true
+                      }}
+                      inputProps={{
+                        multiline: true,
+                        rows: 3,
+                        onChange: handleProfileDescChange,
+                        value: user.description
+                      }}
+                    >
+                    </CustomInput>
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12}>
+                    <h4>Professional interests</h4>
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12}>
+                    <InterestAutocomplete callback={handleInterestsCallback}></InterestAutocomplete>
+                  </GridItem>
+                  <GridItem>
+                    <Paper component="ul">
+                      {renderInterests()}
+                    </Paper>
+                  </GridItem>
+                </GridContainer>
+              </CardBody>
+              <CardFooter>
+                <Button color="primary" onClick={() => handleUpdateProfile()}>Update Profile</Button>
+              </CardFooter>
+            </Card>
+          </GridItem>
+          <GridItem xs={12} sm={12} md={4}>
+            <Card profile>
+              <CardAvatar profile>
+                <a href="#pablo" onClick={e => e.preventDefault()}>
+                  <img src={avatar} alt="..." />
+                </a>
+              </CardAvatar>
+              <CardBody profile>
+                <h4 className={classes.cardTitle}>{user.firstName} {user.lastName}</h4>
+                <p>Age: {user.age}</p>
+                <p className={classes.description}>
+                  {user.description}
+                </p>
+              </CardBody>
+              <CardFooter>
+
+              </CardFooter>
+            </Card>
+            {RenderChangesmade()}
+          </GridItem>
+          <GridItem xs={12} sm={12} md={12}>
+            <Card>
+              <CardHeader color="primary">
+                <h4 className={classes.cardTitleWhite}>Edit Projects</h4>
+                <p className={classes.cardCategoryWhite}>Edit or remove projects</p>
+              </CardHeader>
+              <CardBody>
+                <GridContainer>
+                  <List className={classes.listroot}>
+                    {
+                      projects.length != 0 ? renderProjects() : <label>No projects found</label>
+                    }
+                  </List>
+                </GridContainer>
+              </CardBody>
+              <CardFooter>
+                <CreateProjectDialog submitcallback={createprojectcallback}></CreateProjectDialog>
+              </CardFooter>
+            </Card>
+          </GridItem>
+        </GridContainer>
+      </div>
+    )
+  }
+
+  const renderNoLogin = () => {
+    return (<div>
+      <h3>
+        Please login first.
+      </h3>
+    </div>
+    );
+  }
+
   return (
     <div>
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={8}>
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
-              <p className={classes.cardCategoryWhite}>Complete your profile</p>
-            </CardHeader>
-            <CardBody>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="First Name"
-
-                    id="first-name"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      onChange: handleFirstNameChange,
-                      value: profile.firstName
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="Last Name"
-                    id="last-name"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      onChange: handleLastNameChange,
-                      value: profile.lastName
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="Age"
-                    id="age"
-                    formControlProps={{
-                      fullWidth: false
-                    }}
-                    inputProps={{
-                      onChange: handleAgeChange,
-                      value: profile.age,
-                      type: "number"
-                    }}
-                  />
-                </GridItem>
-
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12}>
-                  <CustomInput
-                    labelText="Profile description"
-                    id="profiledescription"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      multiline: true,
-                      rows: 3,
-                      onChange: handleProfileDescChange,
-                      value: profile.description
-                    }}
-                  >
-                  </CustomInput>
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12}>
-                <h4>Professional interests</h4>
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-              <GridItem xs={12}>
-                <InterestAutocomplete></InterestAutocomplete>
-                </GridItem>
-              </GridContainer>
-            </CardBody>
-            <CardFooter>
-              <Button color="primary" onClick={() => handleUpdateProfile()}>Update Profile</Button>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card profile>
-            <CardAvatar profile>
-              <a href="#pablo" onClick={e => e.preventDefault()}>
-                <img src={avatar} alt="..." />
-              </a>
-            </CardAvatar>
-            <CardBody profile>
-              <h4 className={classes.cardTitle}>{profile.firstName} {profile.lastName}</h4>
-              <p>Age: {profile.age}</p>
-              <p className={classes.description}>
-                {profile.description}
-              </p>
-            </CardBody>
-            <CardFooter>
-              
-            </CardFooter>
-          </Card>
-          {RenderChangesmade()}
-        </GridItem>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Edit Projects</h4>
-              <p className={classes.cardCategoryWhite}>Edit or remove projects</p>
-            </CardHeader>
-            <CardBody>
-              <GridContainer>
-                <List className={classes.listroot}>
-                  {
-                    projects.map((project) => {
-                      return (
-                        <ListItem>
-                          <GridItem xs={12} md={11}>
-                            <ListItemText
-                              primary={project.name}
-                              secondary={project.description}
-                            >
-                            </ListItemText>
-                          </GridItem>
-                          <GridItem xs={12} md={1}>
-                            <DeleteForeverIcon onClick={() => handleProjectRemove(project.key)}></DeleteForeverIcon>
-                          </GridItem>
-                        </ListItem>
-                      )
-                    })
-                  }
-                </List>
-              </GridContainer>
-            </CardBody>
-            <CardFooter>
-              <CreateProjectDialog submitcallback={createprojectcallback}></CreateProjectDialog>
-            </CardFooter>
-          </Card>
-        </GridItem>
-      </GridContainer>
+      {
+        user !== null ? renderProfile() : renderNoLogin()
+      }
     </div>
   );
 }

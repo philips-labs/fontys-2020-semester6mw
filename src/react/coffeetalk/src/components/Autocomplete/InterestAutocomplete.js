@@ -36,36 +36,45 @@ const useStyles = makeStyles((styles) => ({
 export default function InterestAutocomplete() {
     const classes = useStyles();
     const [codelanguages, setCodelanguages] = React.useState(
-        [{name: 'C#'},
-        {name: 'Vue.js'},
-        {name: 'Angular'},
-        {name: 'React'},
-        {name: 'C++'},
-        {name: 'Java'},
-        {name: 'Python'}]
+        ['C#',
+        'Vue.js',
+        'Angular',
+        'React',
+        'C++',
+        'Java',
+        'Python']
     )
 
 
 
+/*    const createList = () => {
+        var returnable = []
+        var array = JSON.parse(sessionStorage.getItem("user")).interests
+        for (let i = 0; i < array.length; i++) {
+            const e = array[i];
+            returnable.push({name: e})
+        }
+        console.log(JSON.parse(sessionStorage.getItem("user")).interests)
+        return(returnable)
+    }
+*/
 
 
     const [value, setValue] = React.useState(null);
     const [open, toggleOpen] = React.useState(false);
-    const [dialogValue, setDialogValue] = React.useState({name:''});
-    const [interests, setInterests] = React.useState([])
-
+    const [dialogValue, setDialogValue] = React.useState('');
+    const [interests, setInterests] = React.useState([]) //please change, horrible way to do it. send it as parameter to fix
+//JSON.parse(sessionStorage.getItem("user")).interests
     const handleClose = () => {
-        setDialogValue({
-            name:''
-        });
+        setDialogValue('');
         toggleOpen(false);
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        setValue({name:dialogValue.name});
+        setValue(dialogValue);
         const t = codelanguages.length + 1;
-        setCodelanguages(codelanguages => [...codelanguages, {name: dialogValue.name}])
+        setCodelanguages(codelanguages => [...codelanguages, dialogValue])
         handleClose();
     };
 
@@ -73,9 +82,19 @@ export default function InterestAutocomplete() {
         if(event.key === 'Enter'){
             if(value != null){
             setInterests(interests => [...interests, value])
+            var user = JSON.parse(sessionStorage.getItem("user"))
+            user.interests = [...interests, value]
+            sessionStorage.setItem("user", JSON.stringify(user))
             setValue(null)
             }
         }
+        if(interests != undefined){
+            if(interests.length > 0){
+                console.log([...interests, value]);
+            }
+
+        }
+
     }
 
     const handleDelete = (data) => {
@@ -87,14 +106,26 @@ export default function InterestAutocomplete() {
         }
     }
 
-    
-
-
-    useEffect(() => {
-        console.log(codelanguages)
-    })
+    const renderInterests = () => {
+        interests.map((data) => {
+            let icon;
+            return(
+              <li >
+                <Chip
+                  color={"primary"}
+                  onClick={() => handleDelete(data)}
+                  variant={"default"}
+                  icon={icon}
+                  label={data}
+                  className={classes.chip}>
+                </Chip>
+              </li>
+            )
+          })
+    }
 
     return (
+        
         <React.Fragment>
             <GridContainer>
                 <GridItem xs={12} sm={12}>
@@ -105,14 +136,16 @@ export default function InterestAutocomplete() {
                         setTimeout(() => {
                             toggleOpen(true);
                             setDialogValue({
-                                name: newValue
-                            });
+                                 interest: newValue
+                            }
+                            );
                         });
                     } else if (newValue && newValue.inputValue) {
                         toggleOpen(true);
                         setDialogValue({
-                            name: newValue.inputValue
-                        });
+                            interest: newValue.inputValue
+                        }
+                        );
                     } else {
                         setValue(newValue);
                     }
@@ -138,12 +171,12 @@ export default function InterestAutocomplete() {
                     if(option.inputValue) {
                         return option.inputValue;
                     }
-                    return option.name;
+                    return option;
                 }}
                 selectOnFocus
                 clearOnBlur
                 handleHomeEndKeys
-                renderOption={(option) => option.name}
+                renderOption={(option) => option.interest}
                 style={{width: 300}}
                 freeSolo
                 renderInput={(params) => (
@@ -152,21 +185,9 @@ export default function InterestAutocomplete() {
                 /></GridItem>
                 <GridItem xs={12} sm={12}>
                     <Paper component="ul" className={classes.root}>
-                    {interests.map((data) => {
-                      let icon;
-                      return(
-                        <li key={data.name}>
-                          <Chip
-                            color={"primary"}
-                            onClick={() => handleDelete(data)}
-                            variant={"default"}
-                            icon={icon}
-                            label={data.name}
-                            className={classes.chip}>
-                          </Chip>
-                        </li>
-                      )
-                    })}
+                    {
+                        interests != undefined ? renderInterests() : <label>No interests found</label>
+                    }
                   </Paper>
                   </GridItem>
                 <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -180,8 +201,8 @@ export default function InterestAutocomplete() {
                                 autoFocus
                                 margin="dense"
                                 id="name"
-                                value={dialogValue.name}
-                                onChange={(event) => setDialogValue({ ...dialogValue, name: event.target.value})}
+                                value={dialogValue}
+                                onChange={(event) => setDialogValue( ...dialogValue, event.target.value)}
                                 label="title"
                                 type="text"
                             />

@@ -37,7 +37,7 @@ const switchRoutes = (
   </Switch>
 );
 
-const useStyles = makeStyles(styles);
+const useStyles = makeStyles(styles); 
 
 export default function Admin({ ...rest }) {
   // styles
@@ -95,7 +95,7 @@ export default function Admin({ ...rest }) {
     <div className={classes.wrapper}>
       <Sidebar
         routes={routes}
-        logoText={"Creative sky"}
+        logoText={"Coffee Talk"}
         logo={logo}
         image={image}
         handleDrawerToggle={handleDrawerToggle}

@@ -1,6 +1,6 @@
 namespace CoffeeTalk.Microservice.Profile.Models.RequestBody
 {
-    public class CreateProfileRequestBody
+    public class MatchUsersRequestBody
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

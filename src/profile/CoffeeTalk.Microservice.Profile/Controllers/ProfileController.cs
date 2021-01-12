@@ -53,10 +53,48 @@ namespace CoffeeTalk.Microservice.Profile.Controllers
         {
             string firstName = createProfileRequestBody.FirstName;
             string lastName = createProfileRequestBody.LastName;
-            int age = createProfileRequestBody.Age;
+            int age = Int32.Parse(createProfileRequestBody.Age);
             string description = createProfileRequestBody.Description;
 
             _profileRepo.CreateProfile(firstName, lastName, age, description);
         }
+
+        [HttpGet("getprofile")]
+        public async Task<IActionResult> GetProfile(string firstname, string lastname)
+        {
+            var result = await _profileRepo.GetProfile(firstname, lastname);
+            if (result == null) return NotFound("This profile does not exist");
+            return Ok(result);
+        }
+
+        [HttpGet("getlast2")]
+        public async Task<IActionResult> GetLast2(){
+            var result = await _profileRepo.GetLast2Profiles();
+            if(result == null) return NotFound("cant find profiles");
+            return Ok(result);
+        }
+
+        [HttpPut("updateprofile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserRequestBody updateUserRequestBody){
+            string id = updateUserRequestBody.Id;
+            string firstname = updateUserRequestBody.FirstName;
+            string lastname = updateUserRequestBody.LastName;
+            int age = Int32.Parse(updateUserRequestBody.Age);
+            string description = updateUserRequestBody.Description;
+            
+            var result = await _profileRepo.UpdateUser(id, firstname, lastname, age, description);
+            return Ok(result);
+        }
+
+        [HttpPut("updateinterests")]
+        public async Task<IActionResult> UpdateInterests([FromBody] UpdateInterestsRequestBody updateInterestsRequestBody){
+            string id = updateInterestsRequestBody.Id;
+            List<string> interests = updateInterestsRequestBody.Interests;
+
+            var result = await _profileRepo.UpdateInterests(id, interests);
+            return Ok(result);
+        }
+
+
     }
 }

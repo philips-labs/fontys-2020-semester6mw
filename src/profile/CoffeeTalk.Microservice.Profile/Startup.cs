@@ -18,6 +18,7 @@ namespace CoffeeTalk.Microservice.Profile
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         public Startup(IConfiguration configuration)
         {
@@ -30,6 +31,15 @@ namespace CoffeeTalk.Microservice.Profile
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddCors(options => {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder => {
+                                      builder.AllowAnyOrigin()
+                                             .AllowAnyHeader()
+                                             .AllowAnyMethod();
+                                  });
+            });
 
             services.Configure<ProfileDatabaseSettings>(options =>
             {
@@ -62,6 +72,8 @@ namespace CoffeeTalk.Microservice.Profile
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 

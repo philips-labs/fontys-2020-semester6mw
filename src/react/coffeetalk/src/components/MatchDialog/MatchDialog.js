@@ -9,7 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Button from "components/CustomButtons/Button.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import InterestAutocomplete from 'components/Autocomplete/InterestAutocomplete';
-import avatar from "assets/img/faces/christine.jpg";
+import avatar from "assets/img/faces/marc.jpg";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
@@ -61,7 +61,7 @@ export default function MatchDialog(props) {
 
 
     const classes = useStyles();
-    const [open, toggleOpen] = React.useState(false);
+    const [open, toggleOpen] = React.useState(props.open);
     const [match, setMatch] = React.useState(props.match);
 
     const handleClose = () => {
@@ -74,10 +74,21 @@ export default function MatchDialog(props) {
         console.log("submitting")
     }
 
+    const handleKeyPress = (event) => {
+        if(event.key === 'v'){
+            toggleOpen(true);
+        }
+    }
+
+    const handleClick = () => {
+            toggleOpen(true);
+    }
+
+
 
     return (
-        <div>
-            <Button onClick={() => toggleOpen(true)}>Simulate match</Button>
+        <div onKeyPress={handleKeyPress}>
+           <label onClick={handleClick}>.</label>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <form onSubmit={e => e.preventDefault()}>
                     <DialogTitle id="form-dialog-title">You have matched!</DialogTitle>

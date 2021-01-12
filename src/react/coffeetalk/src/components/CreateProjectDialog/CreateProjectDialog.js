@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from 'components/CustomButtons/Button.js'
 import CustomInput from "components/CustomInput/CustomInput.js";
-import InterestAutocomplete from 'components/Autocomplete/InterestAutocomplete';
+import InterestAutocomplete from 'components/Autocomplete/Autocomplete2.js';
 
 export default function CreateProjectDialog(props){
 
@@ -27,10 +27,13 @@ export default function CreateProjectDialog(props){
     const handleSubmit = (event) => {
         console.log(project)
         props.submitcallback(project)
+        toggleOpen(false);
     }
     
-    const interestCallback = (interestlist) => {
-        setProject({...project, interests: interestlist})
+    const interestCallback = (interest) => {
+        var inter = project.interests;
+        inter.push(interest)
+        setProject({...project, interests: inter})
     }
 
     return(

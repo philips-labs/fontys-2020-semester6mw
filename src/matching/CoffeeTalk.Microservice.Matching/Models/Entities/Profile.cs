@@ -1,10 +1,15 @@
 using System;
 using System.Collections.Generic;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace CoffeeTalk.Microservice.Matching.Models.Entities
 {
     public class Profile
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
         public string FirstName { get; set; }
